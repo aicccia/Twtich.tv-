@@ -15,7 +15,9 @@ $(document).ready(function() {
             "comster404",
             "Test_channel",
             "thomasballinger",
-            "noobs2ninjas"];
+            "noobs2ninjas",
+            "comster404",
+            "brunofin"];
 
     var url = "https://api.twitch.tv/kraken/streams/";
     var game, preview;
@@ -25,32 +27,46 @@ $(document).ready(function() {
         (function () {
             var account = users[i];
             $.getJSON(url + users[i], function (status) {
-                // console.log(status.stream._id);
-
-
-                if (!status.stream) {
-                    game = "offline";
-                    $(".seperator").after("" +
-                        "<div class=\"streamer offline\">" +
-                            "<div class=\"profilePic\"></div>" +
-                            "<div class=\"profileName\"><p>" + account + "</p></div>" +
-                            "<div class=\"profileStatus\"><p>" + game + "</p></div>" +
-                        "</div>");
-                }
-
 
                 if (status.stream) {
                     game = status.stream.game;
-                    var pic = status.stream._links.preview.small;
-                    console.log(pic);
+                    preview = status.stream.channel.logo;
 
                     $("header").after("" +
-                        "<div class=\"streamer online\">" +
-                            "<div class=\"profilePic\"><img src=pic></div>" +
-                            "<div class=\"profileName\"><p>" + account + "</p></div>" +
-                            "<div class=\"profileStatus\"><p>" + game + "</p></div>" +
-                        "</div>");
+                        "<a href=\"https://www.twitch.tv/"+ account +"\">" +
+                            "<div class=\"streamer online\">" +
+                                "<div class=\"profilePic\"><img src=" + preview + "></div>" +
+                                "<div class=\"profileName\"><p>" + account + "</p></div>" +
+                                "<div class=\"profileStatus\"><p>" + game + "</p></div>" +
+                            "</div>" +
+                        "</a>");
                 }
+
+                if (!status.stream) {
+                    game = "offline";
+                    preview = status.stream.channel.logo;
+
+                    $(".offlineUsers").after("" +
+                        "<a href=\"https://www.twitch.tv/"+ account +"\">" +
+                            "<div class=\"streamer offline\">" +
+                                "<div class=\"profilePic\"><img src=" + preview + "></div>" +
+                                "<div class=\"profileName\"><p>" + account + "</p></div>" +
+                                "<div class=\"profileStatus\"><p>" + game + "</p></div>" +
+                            "</div>" +
+                        "</a>");
+                }
+        /*
+                if (status.status == 422) {
+                    game = "Account Does Not Exist";
+
+                    $(".noAccountUsers").after("" +
+                            "<div class=\"streamer offline\">" +
+                                "<div class=\"profilePic\"></div>" +
+                                "<div class=\"profileName\"><p>" + account + "</p></div>" +
+                                "<div class=\"profileStatus\"><p>" + game + "</p></div>" +
+                            "</div>");
+                }
+*/
 
             });
         })();
